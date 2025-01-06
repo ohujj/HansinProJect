@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 검색</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>사용자 검색</h1>
+<form th:action="@{/search}" method="get">
+    <input type="text" name="nickname" placeholder="닉네임 입력">
+    <button type="submit">검색</button>
+</form>
+</body>
+</html>

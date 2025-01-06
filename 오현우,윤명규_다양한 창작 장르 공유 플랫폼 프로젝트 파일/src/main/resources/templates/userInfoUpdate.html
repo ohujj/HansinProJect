@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 정보 수정</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/myPosts.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>회원 정보 수정</h1>
+
+<form th:action="@{/mypage/userInfo/update}" method="post" th:object="${user}">
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" th:value="${user.name}" required>
+
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" th:value="${user.email}" required>
+
+    <button type="submit">수정하기</button>
+</form>
+
+<a th:href="@{/mypage}">마이페이지로 돌아가기</a>
+
+</body>
+</html>

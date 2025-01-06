@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/newLogin.css}">
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript" th:src="@{/js/login.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+<!--<div class="page">-->
+<!--    <div class="container">-->
+<!--        <div class="left">-->
+<!--            <div class="login">로그인</div>-->
+<!--            <div class="eula">로그인함으로써 당신은 읽지 않은 긴 약관에 동의합니다.</div>-->
+<!--        </div>-->
+<!--        <div class="right">-->
+<!--            <svg viewBox="0 0 320 300">-->
+<!--                <defs>-->
+<!--                    <linearGradient-->
+<!--                            id="linearGradient"-->
+<!--                            x1="13"-->
+<!--                            y1="193.49992"-->
+<!--                            x2="307"-->
+<!--                            y2="193.49992"-->
+<!--                            gradientUnits="userSpaceOnUse">-->
+<!--                        <stop style="stop-color:#ff00ff;" offset="0" id="stop876" />-->
+<!--                        <stop style="stop-color:#ff0000;" offset="1" id="stop878" />-->
+<!--                    </linearGradient>-->
+<!--                </defs>-->
+<!--                <path d="m 40,120.00016 239.99984,-3.2e-4 c 0,0 24.99263,0.79932 25.00016,35.00016 0.008,34.20084 -25.00016,35 -25.00016,35 h -239.99984 c 0,-0.0205 -25,4.01348 -25,38.5 0,34.48652 25,38.5 25,38.5 h 215 c 0,0 20,-0.99604 20,-25 0,-24.00396 -20,-25 -20,-25 h -190 c 0,0 -20,1.71033 -20,25 0,24.00396 20,25 20,25 h 168.57143" />-->
+<!--            </svg>-->
+<!--            <div class="form">-->
+<!--                <form action="#" th:action="@{/login}" method="post">-->
+<!--                    <label for="username">아이디:</label>-->
+<!--                    <input type="text" id="username" name="username" required>-->
+
+<!--                    <label for="password">비밀번호:</label>-->
+<!--                    <input type="password" id="password" name="password" required>-->
+
+<!--                    <input type="submit" id="submit" value="로그인">-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; 로그인 실패 메시지 &ndash;&gt;-->
+<!--    <div th:if="${param.error}" style="color:red; text-align:center;">로그인에 실패했습니다. 다시 시도해 주세요.</div>-->
+<!--</div>-->
+<div id="container" class="container">
+    <!-- FORM SECTION -->
+    <div class="row">
+        <!-- SIGN UP -->
+        <div class="col align-items-center flex-col sign-up">
+            <div class="form-wrapper align-items-center">
+                <div class="form sign-up">
+<!--                    <div class="input-group">-->
+<!--                        <i class='bx bxs-user'></i>-->
+<!--                        <input type="text" placeholder="Username">-->
+<!--                    </div>-->
+<!--                    <div class="input-group">-->
+<!--                        <i class='bx bx-mail-send'></i>-->
+<!--                        <input type="email" placeholder="Email">-->
+<!--                    </div>-->
+<!--                    <div class="input-group">-->
+<!--                        <i class='bx bxs-lock-alt'></i>-->
+<!--                        <input type="password" placeholder="Password">-->
+<!--                    </div>-->
+<!--                    <div class="input-group">-->
+<!--                        <i class='bx bxs-lock-alt'></i>-->
+<!--                        <input type="password" placeholder="Confirm password">-->
+<!--                    </div>-->
+<!--                    <button>-->
+<!--                        Sign up-->
+<!--                    </button>-->
+                    <form th:object="${user}" th:action="@{/users/register}" method="post">
+                        <div class="input-group">
+                            <input type="email" id="email" placeholder="이메일" th:field="*{email}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" id="name" placeholder="이름" th:field="*{name}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" id="nickname" placeholder="닉네임" th:field="*{nickname}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="number" id="age" placeholder="나이" th:field="*{age}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" id="phoneNumber" placeholder="전화번호" th:field="*{phoneNumber}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="date" id="birthday" placeholder="생년월일" th:field="*{birthday}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="gender">성별:</label>
+                            <select id="gender" th:field="*{gender}" required>
+                                <option value="MALE">남자</option>
+                                <option value="FEMALE">여자</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="password" id="password" placeholder="비밀번호" th:field="*{password}" required>
+                        </div>
+
+                        <input type="submit" value="회원가입">
+                    </form>
+                    <p>
+              <span>
+                이미 계정이 있으신가요?
+              </span>
+                        <b onclick="toggle()" class="pointer">
+                            로그인 하러 가기
+                        </b>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <!-- END SIGN UP -->
+        <!-- SIGN IN -->
+        <div class="col align-items-center flex-col sign-in">
+            <div class="form-wrapper align-items-center">
+                <div class="form sign-in">
+                    <form action="#" th:action="@{/login}" method="post">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="username" placeholder="이메일" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="비밀번호" required>
+                        </div>
+                        <input type="submit" value="로그인">
+                    </form>
+<!--                    <p>-->
+<!--                        <b>-->
+<!--                            Forgot password?-->
+<!--                        </b>-->
+<!--                    </p>-->
+                    <p>
+              <span>
+                계정이 없으신가요?
+              </span>
+                    <b onclick="toggle()" class="pointer">
+                            회원가입 하러 가기
+                        </b>
+                    </p>
+                </div>
+            </div>
+            <div th:if="${param.error}" style="color:red; text-align:center;">로그인에 실패했습니다. 다시 시도해 주세요.</div>
+
+            <div class="form-wrapper">
+
+            </div>
+        </div>
+        <!-- END SIGN IN -->
+    </div>
+    <!-- END FORM SECTION -->
+    <!-- CONTENT SECTION -->
+    <div class="row content-row">
+        <!-- SIGN IN CONTENT -->
+        <div class="col align-items-center flex-col">
+            <div class="text sign-in">
+                <h2>
+                    Welcome
+                </h2>
+
+            </div>
+            <div class="img sign-in">
+
+            </div>
+        </div>
+        <!-- END SIGN IN CONTENT -->
+        <!-- SIGN UP CONTENT -->
+        <div class="col align-items-center flex-col">
+            <div class="img sign-up">
+
+            </div>
+            <div class="text sign-up">
+                <h2>
+                    Join with us
+                </h2>
+
+            </div>
+        </div>
+        <!-- END SIGN UP CONTENT -->
+    </div>
+    <!-- END CONTENT SECTION -->
+</div>
+</body>
+<script>
+    let container = document.getElementById('container')
+
+toggle = () => {
+  container.classList.toggle('sign-in')
+  container.classList.toggle('sign-up')
+}
+
+setTimeout(() => {
+  container.classList.add('sign-in')
+}, 200)
+</script>
+</html>

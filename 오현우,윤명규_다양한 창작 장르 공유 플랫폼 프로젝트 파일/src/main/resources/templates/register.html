@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원가입</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>회원가입</h1>
+<form th:object="${user}" th:action="@{/users/register}" method="post">
+    <label for="email">이메일:</label>
+    <input type="email" id="email" th:field="*{email}" required>
+
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+
+    <label for="nickname">닉네임:</label> <!-- 닉네임 필드 추가 -->
+    <input type="text" id="nickname" th:field="*{nickname}" required>
+
+    <label for="age">나이:</label>
+    <input type="number" id="age" th:field="*{age}" required>
+
+    <label for="phoneNumber">전화번호:</label>
+    <input type="text" id="phoneNumber" th:field="*{phoneNumber}" required> <!-- 수정된 부분 -->
+
+    <label for="birthday">생년월일:</label>
+    <input type="date" id="birthday" th:field="*{birthday}" required>
+
+    <label for="gender">성별:</label>
+    <select id="gender" th:field="*{gender}" required>
+        <option value="MALE">남자</option>
+        <option value="FEMALE">여자</option>
+    </select>
+
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" th:field="*{password}" required>
+
+    <button type="submit">가입하기</button>
+</form>
+</body>
+</html>

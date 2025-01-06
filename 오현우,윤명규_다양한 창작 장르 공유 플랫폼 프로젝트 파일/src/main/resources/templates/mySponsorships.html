@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 후원 내역</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/myPosts.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>내 후원 내역</h1>
+
+<p>총 후원 금액: <span th:text="${totalSponsorshipAmount} + '원'">0원</span></p>
+
+<h2>후원 내역</h2>
+<ul>
+    <th:block th:if="${sponsorships != null}">
+        <th:block th:each="sponsorship : ${sponsorships}">
+            <li th:text="'후원자: ' + ${sponsorship.sponsorNickname} + ', 후원 날짜: ' + ${sponsorship.sponsorshipDate} + ', 금액: ' + ${sponsorship.amount} + '원'"></li>
+        </th:block>
+    </th:block>
+    <th:block th:if="${sponsorships == null}">
+        <p>아직 받은 후원이 없습니다.</p>
+    </th:block>
+</ul>
+
+<a th:href="@{/mypage}">마이페이지로 돌아가기</a>
+
+</body>
+</html>

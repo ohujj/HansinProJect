@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>새 글 작성</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>새 글 작성</h1>
+
+<form action="#" th:action="@{/novel/new}" method="post">
+    <label for="title">제목:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="content">내용:</label>
+    <textarea id="content" name="content" required></textarea>
+
+    <button type="submit">작성</button>
+</form>
+
+<!-- 글 목록으로 돌아가는 버튼 -->
+<div>
+    <a th:href="@{/novel}">
+        <button type="button">글 목록</button>
+    </a>
+</div>
+
+</body>
+</html>

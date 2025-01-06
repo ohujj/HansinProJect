@@ -1,0 +1,62 @@
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+    thymeleaf:
+      cache: false
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/ohgpt;
+    username: oh
+    password:
+    driver-class-name: org.h2.Driver
+
+#     명규님 코드
+#    url: jdbc:mysql://localhost:3306/hanshin
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true  # 추가된 부분
+
+logging:
+  level:
+    com.withgpt.gpt: DEBUG
+    com.withgpt.gpt.controller.NovelController: DEBUG
+    com.withgpt.gpt.service.ImageGenerationService: DEBUG
+    org.springframework.web: DEBUG  # Spring Web 관련 로그를 디버그 레벨로 설정
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{10} - %msg%n"
+
+
+stability:
+  api:
+    
+
+openai:
+  api:
+ 
+server:
+  tomcat:
+    uri-encoding: UTF-8  # 추가된 부분
+
+naver:
+  papago:
+    client-id:
+    client-secret:
+    detect-url: https://naveropenapi.apigw.ntruss.com/langs/v1/dect
+    translate-url: https://naveropenapi.apigw.ntruss.com/nmt/v1/translation

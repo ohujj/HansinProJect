@@ -1,0 +1,100 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900);
+@import url('https://fonts.googleapis.com/css2?family=Song+Myung&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a:hover, a:focus {
+  outline: none;
+}
+
+h1{
+    font-family: Merriweather;
+    font-size: 25px;
+    color: #333;
+}
+
+.menu a {
+  color: rgba(0, 0, 0, 1);
+  font-family: Merriweather;
+  font-size: 17pt;
+  font-weight: 400;
+  padding: 15px 25px;
+  /**/
+  position: relative;
+  display: block;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.SMN_effect-34 a:before, .SMN_effect-34 a span:before, .SMN_effect-34 a:after, .SMN_effect-34 a span:after {
+  content: "";
+  position: absolute;
+}
+
+.SMN_effect-34 a:before, .SMN_effect-34 a span:before {
+  top: -webkit-calc(50% - .3em);
+  top: calc(50% - .3em);
+  left: -.25em;
+  width: .5em;
+  height: .5em;
+  opacity: 0;
+  -webkit-transform: translate3d(-.6em, 0, 0) rotate(45deg);
+  transform: translate3d(-.6em, 0, 0) rotate(45deg)
+}
+
+.SMN_effect-34 a:after, .SMN_effect-34 a span:after {
+  bottom: -webkit-calc(50% - .35em);
+  bottom: calc(50% - .35em);
+  right: -.25em;
+  width: .5em;
+  height: .5em;
+  opacity: 0;
+  -webkit-transform: translate3d(.6em, 0, 0) rotate(45deg);
+  transform: translate3d(.6em, 0, 0) rotate(45deg)
+}
+
+.SMN_effect-34 a:before, .SMN_effect-34 a:after {
+  -webkit-transition: -webkit-transform .3s ease-out, opacity .3s;
+  transition: transform .3s ease-out, opacity .3s
+}
+
+.SMN_effect-34 a span:before, .SMN_effect-34 a span:after {
+  -webkit-transition: -webkit-transform .3s ease-out .15s, opacity 0s .05s;
+  transition: transform .3s ease-out .15s, opacity 0s .05s
+}
+
+.SMN_effect-34 a:hover {
+  overflow: visible
+}
+
+.SMN_effect-34 a:hover:before, .SMN_effect-34 a:hover span:before {
+  -webkit-transform: translate3d(0, 0, 0) rotate(45deg);
+  transform: translate3d(0, 0, 0) rotate(45deg);
+  opacity: 1
+}
+
+.SMN_effect-34 a:hover:after, .SMN_effect-34 a:hover span:after {
+  -webkit-transform: translate3d(0, 0, 0) rotate(45deg);
+  transform: translate3d(0, 0, 0) rotate(45deg);
+  opacity: 1
+}
+
+.SMN_effect-34 a:before, .SMN_effect-34 a span:before {
+  border-right: .15em solid rgba(0, 0, 0, 0.4);
+  border-top: .15em solid rgba(0, 0, 0, 0.4);
+}
+
+.SMN_effect-34 a:after, .SMN_effect-34 a span:after {
+  border-left: .15em solid rgba(0, 0, 0, 0.4);
+  border-bottom: .15em solid rgba(0, 0, 0, 0.4);
+}
+
+.row, h1{
+    overflow: hidden;
+    white-space: nowrap;
+}

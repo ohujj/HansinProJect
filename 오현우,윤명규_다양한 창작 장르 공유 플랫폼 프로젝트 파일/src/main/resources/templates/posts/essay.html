@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>소설 게시판</title>
+    <!-- CSS 파일 불러오기 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+    <link rel="stylesheet" th:href="@{/css/novel.css}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>소설 게시판</h1>
+
+<!-- 버튼과 드롭다운 -->
+<div class="button-container">
+    <div class="left-buttons">
+        <!-- 날짜 선택 드롭다운 -->
+        <!-- 월별 선택 드롭다운 메뉴 -->
+        <div class="dropdown" style="margin-right: 10px;">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="monthDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                월별 선택
+            </button>
+            <div class="dropdown-menu" aria-labelledby="monthDropdown">
+                <a class="dropdown-item" th:href="@{'/essay?sort=' + ${sort} + '&month=8'}">8월</a>
+                <a class="dropdown-item" th:href="@{'/essay?sort=' + ${sort} + '&month=9'}">9월</a>
+                <a class="dropdown-item" th:href="@{'/essay?sort=' + ${sort} + '&month=10'}">10월</a>
+                <a class="dropdown-item" th:href="@{'/essay?sort=' + ${sort} + '&month=11'}">11월</a>
+                <a class="dropdown-item" th:href="@{'/essay?sort=' + ${sort} + '&month=12'}">12월</a>
+            </div>
+        </div>
+
+        <!-- 정렬 기준 드롭다운 메뉴 -->
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                정렬 기준
+            </button>
+            <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                <a class="dropdown-item" th:href="@{'/essay?sort=date&month=' + ${month}}">날짜순</a>
+                <a class="dropdown-item" th:href="@{'/essay?sort=like&month=' + ${month}}">좋아요순</a>
+                <a class="dropdown-item" th:href="@{'/essay?sort=view&month=' + ${month}}">조회수순</a>
+            </div>
+        </div>
+
+    </div>
+    <div class="box">
+        <a th:href="@{/essay/new}">
+            <button style="color:black;" class="button button--antiman button--round-l button--text-medium"><i class="button__icon icon icon-plus"></i><span>글 작성</span></button>
+        </a>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row justify-content-start">
+        <div class="col-md-4" th:each="post : ${posts}">
+            <div class="post-item">
+                <img th:src="@{'/essay/files/' + ${post.imageUrl}}" onerror="this.onerror=null; this.src='/uploads/images/photo-1518277980269-c1eb88ad9693.avif';" class="post-thumbnail" style="width: 512px; height: 512px; object-fit: cover;">
+                <div class="post-info">
+                    <h4 class="post-title" th:text="${post.title}">게시글 제목</h4>
+                    <p class="post-author" th:text="${post.nickname}">작성자</p>
+                    <p class="post-stats">조회수: <span th:text="${post.viewCount}">0</span> 좋아요: <span th:text="${post.likeCount}">0</span></p>
+                    <a th:href="@{'/essay/' + ${post.id}}" class="btn btn-primary">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 페이지 이동 버튼 -->
+<div class="pagination">
+    <a th:if="${posts.hasPrevious()}" th:href="@{'/essay?page=' + (${posts.number - 1}) + '&sort=' + ${sort} + '&month=' + ${month}}">이전</a>
+    <a th:if="${posts.hasNext()}" th:href="@{'/essay?page=' + (${posts.number + 1}) + '&sort=' + ${sort} + '&month=' + ${month}}">다음</a>
+</div>
+
+<!-- 메인화면으로 돌아가는 버튼 -->
+<div class="box bg-1">
+    <a th:href="@{/}">
+        <button class="button button--antiman button--round-l button--text-medium"><i class="button__icon icon icon-plus"></i><span>메인화면으로 돌아가기</span></button>
+    </a>
+</div>
+
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구독 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/myPosts.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>내 구독 목록</h1>
+
+<ul>
+    <li th:each="subscription : ${subscriptions}">
+        <p>구독한 작가: <span th:text="${subscription.authorEmail}">작가 이메일</span></p>
+    </li>
+</ul>
+
+
+
+<a th:href="@{/mypage}">마이페이지로 돌아가기</a>
+
+</body>
+</html>

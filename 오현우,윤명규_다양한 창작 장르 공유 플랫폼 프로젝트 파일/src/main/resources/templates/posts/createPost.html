@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글 작성</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+    <link rel="stylesheet" th:href="@{/css/novel.css}">
+    <!-- Google Fonts 불러오기 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* 기본 폰트 스타일 정의 */
+        .font-nanum-gothic { font-family: 'Nanum Gothic', sans-serif; }
+        .font-nanum-myeongjo { font-family: 'Nanum Myeongjo', serif; }
+        .font-noto-sans-kr { font-family: 'Noto Sans KR', sans-serif; }
+        .font-noto-serif-kr { font-family: 'Noto Serif KR', serif; }
+        .nanum-pen-script-regular {
+            font-family: "Nanum Pen Script", cursive;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .nanum-brush-script-regular {
+          font-family: "Nanum Brush Script", cursive;
+          font-weight: 400;
+          font-style: normal;
+        }
+
+        form {
+            width: 80%;
+            max-width: 800px; /* 원하는 최대 너비 설정 */
+            margin: 0 auto; /* 양쪽 여백 자동 */
+            padding: 20px; /* 패딩 추가 */
+            border: 1px solid #ccc; /* 테두리 추가 */
+            border-radius: 8px; /* 모서리 둥글게 */
+            background-color: #fff; /* 배경색 설정 */
+        }
+
+        textarea {
+            font-size: 22px;
+            width: 100%; /* 텍스트 영역 너비를 100%로 설정 */
+            height: 200px; /* 텍스트 영역 높이 설정 */
+            padding: 10px; /* 내부 여백 추가 */
+            border: 1px solid #ccc; /* 테두리 추가 */
+            border-radius: 4px; /* 모서리 둥글게 */
+            resize: none; /* 크기 조절 비활성화 */
+        }
+    </style>
+</head>
+<body style="background-color: #efe8df;">
+<div th:replace="fragments/header :: header"></div>
+<h1>글 작성</h1>
+
+<!-- 글 작성 폼 -->
+<form th:action="@{/novel/create}" method="post" enctype="multipart/form-data">
+
+    <!-- 작성자 이름 표시 -->
+    <p>작성자: <span th:text="${username}">사용자 이름</span></p>
+
+    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+
+    <label for="fontSelect">폰트 선택:</label>
+    <select id="fontSelect">
+        <option value="font-nanum-gothic">나눔고딕</option>
+        <option value="font-nanum-myeongjo">나눔명조</option>
+        <option value="font-noto-sans-kr">돋움체</option>
+        <option value="font-noto-serif-kr">본고딕</option>
+        <option value="nanum-pen-script-regular">나눔 펜 스크립트</option>
+        <option value="nanum-brush-script-regular">나눔 브러쉬 스크립트</option>
+    </select>
+
+    <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+
+    <!--폰트 적용을 위한 숨겨진 필드-->
+    <input type="hidden" id="fontClass" name="fontClass" value="">
+
+    <div>
+        <a href="https://ko.dict.naver.com/#/main" target="_blank">
+            <button type="button">사전 보기</button>
+        </a>
+    </div>
+
+    <!-- 맞춤법 검사 버튼 추가 -->
+    <button type="button" id="spellCheckButton">맞춤법 검사</button>
+
+    <!-- 맞춤법 검사 결과를 보여주는 부분 -->
+    <div id="spellCheckResults" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; display: none;">
+        <h4>맞춤법 검사 결과:</h4>
+        <ul id="spellCheckSuggestions"></ul>
+    </div>
+
+    <!-- AI 이미지 생성을 위한 설명 입력 -->
+    <label for="imagePrompt">이미지 설명 (선택 사항):</label>
+    <input type="text" id="imagePrompt" name="imagePrompt" placeholder="AI 그림을 위한 설명을 입력하세요">
+
+    <!-- AI 이미지 생성 버튼 -->
+    <button type="button" id="generateImageButton">AI 이미지 생성</button>
+
+    <!-- AI 이미지 미리보기 -->
+    <div id="imagePreview" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; max-width: 300px;">
+        <p>미리보기:</p>
+        <img id="generatedImage" src="" alt="AI로 생성된 이미지" style="max-width: 100%; display: none;">
+        <p id="imageReadyMessage" style="display: none; color: green;">이 이미지를 섬네일로 사용할 준비가 되었습니다.</p>
+    </div>
+
+    <!-- 이미지 URL 숨김 필드 -->
+    <input type="hidden" id="imageUrl" name="imageUrl" value="">
+
+    <!-- AI 이미지 서버 저장 버튼 -->
+    <button type="button" id="saveImageButton" style="display:none;">이미지 서버에 저장</button>
+
+    <!-- 파일 업로드 필드 -->
+    <label for="thumbnailFile">섬네일 파일 업로드 (선택 사항):</label>
+    <input type="file" id="thumbnailFile" name="thumbnailFile">
+
+    <!-- AI 이미지 삭제 버튼 -->
+    <button type="button" id="deleteImageButton" style="display:none;">AI 이미지 삭제</button>
+
+    <!-- 첨부파일 삭제 버튼 -->
+    <button type="button" id="deleteFileButton" style="display:none;">첨부파일 삭제</button>
+
+    <button type="submit">작성 완료</button>
+</form>
+
+<!-- 글 작성 취소하고 목록으로 돌아가는 버튼 -->
+<!--<div>-->
+<!--    <a th:href="@{/novel}">-->
+<!--        <button type="button">목록으로 돌아가기</button>-->
+<!--    </a>-->
+<!--</div>-->
+<div class="box bg-1">
+    <a th:href="@{/novel}">
+        <button class="button button--antiman button--round-l button--text-medium"><i class="button__icon icon icon-plus"></i><span>목록으로 돌아가기</span></button>
+    </a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 맞춤법 검사 버튼 클릭 이벤트
+        $('#spellCheckButton').click(function() {
+            var content = $('#content').val();  // 글 내용 가져오기
+
+            if (!content) {
+                alert('내용을 입력하세요.');
+                return;
+            }
+
+            // 맞춤법 검사 API 호출
+            $.ajax({
+                url: '/api/spellcheck',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ content: content }),
+                success: function(response) {
+                    $('#spellCheckResults').show();
+                    $('#spellCheckSuggestions').empty();  // 이전 결과 지우기
+
+                    // 맞춤법 오류가 있는 경우 처리
+                    if (response.suggestions && response.suggestions.length > 0) {
+                        response.suggestions.forEach(function(suggestion, index) {
+                            var original = suggestion.original ? suggestion.original : '(원본 단어 없음)';
+                            var listItem = `<li>${index + 1}. 원본: ${original} -> 수정: ${suggestion.corrected}
+                                <button class="applySuggestion" data-original="${suggestion.original}" data-corrected="${suggestion.corrected}">수정하기</button></li>`;
+                            $('#spellCheckSuggestions').append(listItem);
+                        });
+
+                        // "수정하기" 버튼 클릭 이벤트 추가
+                        $('.applySuggestion').click(function(event) {
+                            event.preventDefault();  // 기본 동작 중단 (글 작성 방지)
+                            var original = $(this).data('original');
+                            var corrected = $(this).data('corrected');
+                            var content = $('#content').val();
+
+                            if (original) {
+                                // 본문에서 원본 단어를 수정된 단어로 대체
+                                var updatedContent = content.replace(new RegExp(original, 'g'), corrected);
+                                $('#content').val(updatedContent);
+                            } else {
+                                alert("원본 단어가 없습니다.");
+                            }
+                        });
+                    } else {
+                        // 맞춤법 오류가 없는 경우 처리
+                        $('#spellCheckSuggestions').append('<li>맞춤법 오류가 없습니다.</li>');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX 요청 오류:', textStatus, errorThrown);
+                    alert('맞춤법 검사 중 오류가 발생했습니다.');
+                }
+            });
+        });
+
+        // AI 이미지 생성 버튼 클릭 이벤트
+        $('#generateImageButton').click(function() {
+            var prompt = $('#imagePrompt').val();
+
+            if (!prompt) {
+                alert('이미지 설명을 입력하세요.');
+                return;
+            }
+
+            console.log("이미지 프롬프트 입력됨: " + prompt);  // 프롬프트 입력 로그
+
+            // AI 이미지 생성 API 호출
+            $.ajax({
+                url: '/api/image/generate',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ prompt: prompt }),
+                success: function(response) {
+                    if (response.imageUrl) {
+                        console.log("이미지 생성 성공: " + response.imageUrl);
+                        $('#generatedImage').attr('src', response.imageUrl);
+                        $('#generatedImage').show(); // 이미지 미리보기 표시
+                        $('#imageUrl').val(response.imageUrl);
+                        $('#imageReadyMessage').show();
+                        $('#deleteImageButton').show(); // 삭제 버튼 표시
+                        $('#saveImageButton').show(); // 서버 저장 버튼 표시
+                    } else {
+                        console.error("이미지 생성 실패");
+                        alert('이미지 생성에 실패했습니다.');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX 요청 오류:', textStatus, errorThrown);
+                    alert('이미지 생성 중 오류가 발생했습니다.');
+                }
+            });
+        });
+
+        // AI 이미지 삭제 버튼 클릭 이벤트
+        $('#deleteImageButton').click(function() {
+            $('#generatedImage').hide();
+            $('#imageReadyMessage').hide();
+            $('#imageUrl').val('');
+            $('#deleteImageButton').hide();
+            $('#saveImageButton').hide();
+            alert('AI 이미지가 삭제되었습니다.');
+        });
+
+        // 첨부파일 삭제 버튼 클릭 이벤트
+        $('#deleteFileButton').click(function() {
+            $('#thumbnailFile').val('');
+            $('#deleteFileButton').hide();
+            alert('첨부파일이 삭제되었습니다.');
+        });
+
+        // AI 이미지 서버 저장 버튼 클릭 이벤트
+        $('#saveImageButton').click(function() {
+            var imageUrl = $('#imageUrl').val();
+
+            if (!imageUrl) {
+                alert('저장할 이미지가 없습니다.');
+                return;
+            }
+
+            // 서버에 이미지 저장 API 호출
+            $.ajax({
+                url: '/uploads/generateAI',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ imageUrl: imageUrl }),
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert(response.message); // 서버 성공 응답 메시지 표시
+                        $('#saveImageButton').hide(); // 저장 완료 후 버튼 숨기기
+                        $('#thumbnailFile').val(response.filePath); // 섬네일 파일 경로로 설정
+                    } else {
+                        alert(response.message); // 오류 메시지 표시
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('이미지 저장 중 오류 발생:', textStatus, errorThrown);
+                    alert('이미지 저장 중 오류가 발생했습니다.');
+                }
+            });
+        });
+
+        // 폰트 드롭다운 선택 시 textarea의 클래스 변경
+        $('#fontSelect').change(function() {
+            var selectedFont = $(this).val();
+            $('#content').attr('class', selectedFont); // 선택된 폰트 클래스를 textarea에 적용
+            $('#fontClass').val(selectedFont); // 숨겨진 필드에 선택된 폰트 저장
+        });
+    });
+</script>
+
+</body>
+</html>

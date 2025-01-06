@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시글 목록</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1 th:text="'게시판 목록 - ' + ${category}"></h1>
+
+<!-- 검색 폼 -->
+<form action="#" th:action="@{/posts/search}" method="get">
+    <input type="text" name="keyword" placeholder="검색어 입력" required>
+    <button type="submit">검색</button>
+</form>
+
+<form action="#" th:action="@{/posts/search/author}" method="get">
+    <input type="text" name="name" placeholder="작성자 이름 입력" required>
+    <button type="submit">작성자 검색</button>
+</form>
+
+<table>
+    <tr>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>좋아요</th>
+    </tr>
+    <tr th:each="post : ${posts}">
+        <td th:text="${post.title}"></td>
+        <td th:text="${post.author.name}"></td>
+        <td th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>
+        <td>
+            <span th:text="${post.likeCount}"></span>
+            <form th:action="@{/posts/like/{id}(id=${post.id})}" method="post">
+                <input type="hidden" name="category" th:value="${category}">
+                <button type="submit">좋아요</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<div>
+    <span>페이지: </span>
+    <span th:text="${currentPage + 1}"></span>/<span th:text="${totalPages}"></span>
+</div>
+
+<div>
+    <a th:href="@{/posts/{category}(category=${category}, page=${currentPage - 1})}"
+       th:if="${currentPage > 0}">이전</a>
+    <a th:href="@{/posts/{category}(category=${category}, page=${currentPage + 1})}"
+       th:if="${currentPage < totalPages - 1}">다음</a>
+</div>
+</body>
+</html>

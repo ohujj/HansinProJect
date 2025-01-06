@@ -1,0 +1,110 @@
+body {
+    background-color: #efe8df;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between; /* 양쪽 끝으로 정렬 */
+    margin-bottom: 20px;
+    padding: 0 20px; /* 좌우 패딩 추가 */
+}
+
+.left-buttons {
+    display: flex; /* 왼쪽 버튼들을 나란히 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+button {
+    background-color: #4682b4; /* 버튼 색상 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* 버튼 간격 */
+}
+/*
+button:hover {
+    background-color: #5f9ea0; } /* 마우스 오버 시 색상 변경 */
+
+
+
+.box a button:hover {
+    background-color: #efe8df;
+}
+
+table {
+    width: 80%; /* 테이블 폭 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    border-collapse: collapse; /* 테이블 경계 겹침 방지 */
+    background-color: white;
+}
+
+th, td {
+    border: 1px solid #ddd; /* 테이블 경계 */
+    padding: 10px; /* 패딩 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+th {
+    background-color: #4682b4; /* 헤더 배경색 */
+    color: white; /* 헤더 글씨 색상 */
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* 마우스 오버 시 배경색 변경 */
+}
+
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    margin: 0 10px;
+    color: #4682b4;
+    text-decoration: none;
+}
+
+.post-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.post-info {
+    padding: 15px;
+}
+
+.post-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.post-author {
+    font-size: 1rem;
+    color: #555;
+}
+
+.post-stats {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.post-thumbnail {
+    width: 512px;  /* 가로 512px */
+    height: 512px;  /* 세로 512px */
+    object-fit: cover;  /* 이미지 비율을 유지하면서 영역에 맞게 잘라내기 */
+    border-bottom: 1px solid #ddd;
+    margin: 0 auto;  /* 중앙 정렬 */
+}

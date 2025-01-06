@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>후원하기</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>후원하기</h1>
+
+<form th:action="@{/sponsorship/checkout}" method="post">
+    <label for="amount">후원 금액:</label>
+    <input type="number" id="amount" name="amount" required>
+    <input type="hidden" id="authorEmail" name="authorEmail" th:value="${authorEmail}">
+    <button type="submit">후원하기</button>
+</form>
+
+<a th:href="@{/mypage}">마이페이지로 돌아가기</a>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 정보</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/myPosts.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>회원 정보</h1>
+
+<p>이름: <span th:text="${user.name}"></span></p>
+<p>이메일: <span th:text="${user.email}"></span></p>
+<p>가입일: <span th:text="${user.createdDate}"></span></p>
+
+<a th:href="@{/userInfoUpdate}">회원정보 수정</a>
+
+<a th:href="@{/mypage}">마이페이지로 돌아가기</a>
+
+</body>
+</html>

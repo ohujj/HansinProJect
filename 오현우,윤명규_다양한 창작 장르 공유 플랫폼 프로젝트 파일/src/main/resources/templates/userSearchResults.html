@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>검색 결과</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>검색 결과</h1>
+<div th:if="${users.isEmpty()}">
+    <p>해당 닉네임을 가진 사용자가 없습니다.</p>
+</div>
+<ul th:if="${!users.isEmpty()}">
+    <li th:each="user : ${users}">
+        <a th:href="@{/user/{userId}(userId=${user.id})}" th:text="${user.nickname}">사용자 닉네임</a>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>내가 작성한 댓글</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/myPosts.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h1>내가 작성한 댓글 목록</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>댓글 내용</th>
+        <th>작성일</th>
+        <th>게시글 제목</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="comment : ${comments}">
+        <td th:text="${comment.content}">댓글 내용</td>
+        <td>
+            <span th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+        </td>
+        <td>
+            <a th:href="@{/{category}/{id}(category=${comment.post.category.name().toLowerCase()}, id=${comment.post.id})}">
+                <span th:text="${comment.post.title}">글 제목</span>
+            </a>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(comments)}">
+        <td colspan="3">작성한 댓글이 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="box bg-1">
+    <a th:href="@{/mypage}">
+        <button class="button button--antiman button--round-l button--text-medium"><i class="button__icon icon icon-plus"></i><span>마이페이지로 돌아가기</span></button>
+    </a>
+</div>
+
+</body>
+</html>

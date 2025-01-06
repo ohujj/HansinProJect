@@ -1,0 +1,20 @@
+<header th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
+    <h1><a style="text-decoration:none; color:black" th:href="@{/}">우리의 홈페이지</a></h1>
+    <div class="row columns">
+        <nav>
+            <ul class="menu align-center expanded text-center SMN_effect-34">
+                <li><a th:href="@{/novel}"><span>소설 게시판</span></a></li>
+                <li><a th:href="@{/essay}"><span>에세이 게시판</span></a></li>
+                <li><a th:href="@{/poetry}"><span>시 게시판</span></a></li>
+                <li><a th:href="@{/diary}"><span>일기 게시판</span></a></li>
+                <li th:if="${isLoggedIn}"><a th:href="@{/logout}"><span>로그아웃</span></a></li>
+                <li th:unless="${isLoggedIn}"><a th:href="@{/login}"><span>로그인</span></a></li>
+<!--                <li th:unless="${isLoggedIn}"><a th:href="@{/users/register}">회원가입</a></li>-->
+                <li th:if="${isLoggedIn}"><a th:href="@{/mypage}"><span>마이페이지</span></a></li>
+                <li th:if="${isLoggedIn}"><a th:href="@{/userSearch}"><span>회원검색</span></a></li>
+                <li><a id="today-word" style="cursor: pointer;"><span>오늘의 단어</span></a></li> <!-- 오늘의 단어 탭 추가 -->
+            </ul>
+        </nav>
+    </div>
+    <p class="welcome-message" style="color:black;" th:text="${welcomeMessage}">Guest님 환영합니다!</p>
+</header>

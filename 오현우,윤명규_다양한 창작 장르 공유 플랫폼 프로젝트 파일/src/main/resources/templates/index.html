@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>메인 화면</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+<!-- 헤더 프래그먼트 불러오기 -->
+<div th:replace="fragments/header :: header"></div>
+
+<!--<main>-->
+<!--    &lt;!&ndash; 성공 메시지 출력 &ndash;&gt;-->
+<!--    <div th:if="${successMessage}" class="alert alert-success" role="alert">-->
+<!--        <p th:text="${successMessage}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="carousel-wrapper">-->
+<!--        <div class="carousel">-->
+<!--            <img src="/uploads/images/open_book_forest.jpg" alt="Open Book Forest">-->
+<!--            <div class="carousel-buttons">-->
+<!--                <span class="active"></span>-->
+<!--                <span></span>-->
+<!--                <span></span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</main>-->
+
+<!-- 푸터 프래그먼트 불러오기 -->
+<!--<div th:replace="fragments/footer :: footer"></div>-->
+
+<script>
+    $(document).ready(function() {
+        let currentIndex = 0;
+        const images = [
+            "/uploads/images/open_book_forest.jpg",
+            "https://via.placeholder.com/600x300.png?text=Explore+Our+Community",
+            "https://via.placeholder.com/600x300.png?text=Join+Us+Today"
+        ];
+
+        function showImage(index) {
+            $(".carousel img").attr("src", images[index]);
+            $(".carousel-buttons span").removeClass("active");
+            $(".carousel-buttons span").eq(index).addClass("active");
+        }
+
+        $(".carousel-buttons span").click(function() {
+            currentIndex = $(this).index();
+            showImage(currentIndex);
+        });
+
+        setInterval(function() {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        }, 3000);
+
+         $('#today-word').on('click', function() {
+            generateWord();
+        });
+
+        // 단어 생성 및 확인 함수
+        function generateWord() {
+            fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [{ role: 'user', content: '사전에 존재하는 아름다움과 관련된 한국어 단어 하나 생성해줘. 중복된 단어 또는 인물명 또는 영어는 출력하지 말아줘.' }],
+                    max_tokens: 5,
+                    temperature: 1.0
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API 호출 실패: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const randomWord = data.choices[0]?.message?.content.trim(); // 선택된 텍스트가 있는지 확인
+                if (randomWord) {
+                    checkWordExistence(randomWord);
+                } else {
+                    swal("단어를 생성하지 못했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error('오류:', error);
+                swal("오류가 발생했습니다: " + error.message);
+            });
+        }
+
+        // 단어 존재 여부 확인 함수
+        function checkWordExistence(word) {
+            const apiKey = // 발급받은 API 키를 입력합니다.
+            fetch(`https://krdict.korean.go.kr/api/search?key=${apiKey}&part=word&q=${word}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('API 호출 실패: ' + response.statusText);
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(text, "application/xml");
+                    const total = xmlDoc.getElementsByTagName("total")[0].textContent;
+
+                    if (total === "0") {
+                        // 단어가 존재하지 않으면 재시도
+                        generateWord(); // 새로운 단어 생성
+                    } else {
+                        // 단어가 존재할 경우 출력
+                        swal({
+                            title: "오늘의 단어",
+                            text: `${word}`,
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                    swal("오류가 발생했습니다: " + error.message);
+                });
+        }
+
+
+    });
+</script>
+</body>
+</html>

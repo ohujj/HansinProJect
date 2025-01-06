@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title}">poetry Detail</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/readPost.css}">
+    <link rel="stylesheet" th:href="@{/css/button.css}">
+    <!-- Google Fonts 불러오기 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* 기본 폰트 스타일 정의 */
+        .font-nanum-gothic { font-family: 'Nanum Gothic', sans-serif; }
+        .font-nanum-myeongjo { font-family: 'Nanum Myeongjo', serif; }
+        .font-noto-sans-kr { font-family: 'Noto Sans KR', sans-serif; }
+        .font-noto-serif-kr { font-family: 'Noto Serif KR', serif; }
+        .nanum-pen-script-regular {
+            font-family: "Nanum Pen Script", cursive;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .nanum-brush-script-regular {
+          font-family: "Nanum Brush Script", cursive;
+          font-weight: 400;
+          font-style: normal;
+        }
+
+        textarea{
+            font-size: 22px;
+        }
+
+        .pagination {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* 버튼 사이의 간격 조절 */
+            width: auto; /* 페이지 너비 전체를 차지하지 않도록 설정 */
+            margin: 20px auto; /* 상하 여백과 가로 중앙 정렬 */
+        }
+
+        #reportModal {
+            display: none; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); background: white;
+            padding: 20px; border: 1px solid black; z-index: 9999;
+        }
+    </style>
+</head>
+<body style="background-color: #efe8df">
+<div th:replace="fragments/header :: header"></div>
+
+
+<main style="background-color: #efe8df">
+    <h1 th:text="${post.title}">게시글 제목</h1>
+
+    <div style="display: flex; justify-content: space-between;">
+        <!-- 작성자 출력 -->
+        <p>작성자:
+            <a th:href="@{/user/{userId}(userId=${authorId})}" th:text="${authorNickname}">작성자 닉네임</a>
+        </p>
+        <span id="authorName" th:text="${authorNickname}" style="display:none;"></span>
+        <!-- 글의 예상 읽기 시간 표시 -->
+        <p>예상 읽기 시간: <span id="readingTime">0</span> 분</p>
+    </div>
+
+
+    <div class="post-box">
+        <p id="postContent" th:class="${post.fontClass}" th:text="${post.content}">게시글 내용</p>
+    </div>
+
+    <!-- 페이지 네비게이션 버튼 -->
+    <div class="pagination">
+        <button id="prevBtn" class="btn btn-primary" onclick="changePage(-1)">이전</button>
+        <button id="nextBtn" class="btn btn-primary" onclick="changePage(1)">다음</button>
+    </div>
+
+    <!-- 좋아요 및 조회수 -->
+    <p>좋아요 수: <span id="likeCount" th:text="${post.likeCount}">0</span></p>
+    <p>조회수: <span th:text="${post.viewCount}">0</span></p>
+
+    <!-- 좋아요 버튼 (로그인한 사용자만 가능) -->
+    <form style="display: flex;" action="#" method="post" th:action="@{/poetry/{id}/like(id=${post.id})}">
+        <button style="margin-right: 5px;" type="submit" th:disabled="${!isLoggedIn}" th:classappend="${liked} ? 'liked' : ''">
+            <span th:text="${liked} ? '좋아요 취소' : '좋아요'"></span>
+        </button>
+        <!-- 공유하기 버튼 -->
+        <button style="margin-left: 5px; margin-right: 5px;" type="button" class="share-button" onclick="copyToClipboard()">공유하기</button>
+        <button id="reportPostButton" type="button" th:attr="data-post-id=${post.id}">신고</button>
+    </form>
+
+    <!-- 수정 및 삭제 버튼 (작성자일 때만 표시) -->
+    <div th:if="${isAuthor}" class="editDelete">
+        <form action="#" method="post" th:action="@{/poetry/{id}/delete(id=${post.id})}" onsubmit="return confirm('정말 삭제하시겠습니까?');" class="deleteForm">
+            <a th:href="@{/poetry/{id}/edit(id=${post.id})}">
+                <button type="button" class="editButton">수정</button>
+            </a>
+            <button type="submit" class="deleteButton">삭제</button>
+        </form>
+    </div>
+
+    <!-- 에러 메시지 출력 -->
+    <div id="errorMessage" style="color:red;" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <!-- 댓글 섹션 -->
+    <div class="comment-section">
+        <h2>댓글</h2>
+
+        <!-- 댓글 목록 -->
+        <div id="commentsList">
+            <ul>
+                <li class="comment-box" th:each="comment : ${comments}">
+                    <div class="comment-content">
+                        <span class="comment-author" th:text="${comment.author}">댓글 작성자</span>:
+                        <span class="comment-text" style="margin-left: 5px;" th:text="${comment.content}">댓글 내용</span>
+                        <span class="comment-date" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                        <button class="reportCommentButton"
+                                th:attr="data-id=${comment.id}, data-post-id=${post.id}"
+                                type="button">이 댓글 신고</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 댓글 작성 폼 -->
+        <div class="comment-input-box">
+            <form action="#" method="post" th:action="@{/poetry/{id}/comment(id=${post.id})}">
+                <textarea name="content" placeholder="댓글을 작성하세요..." required class="comment-textarea"></textarea>
+                <button type="submit" th:disabled="${!isLoggedIn}">댓글 작성</button>
+            </form>
+        </div>
+
+
+        <!-- 로그인하지 않은 경우 메시지 표시 -->
+        <div th:if="${!isLoggedIn}" class="login-message">
+            <p>로그인 후에 댓글을 작성할 수 있습니다.</p>
+        </div>
+    </div>
+
+    <!-- 글 목록으로 돌아가는 버튼 -->
+    <div class="box bg-1">
+        <a th:href="@{/poetry}">
+            <button class="button button--antiman button--round-l button--text-medium"><i class="button__icon icon icon-plus"></i><span>글 목록</span></button>
+        </a>
+    </div>
+
+</main>
+
+<footer>
+    <p>© 2024 우리의 홈페이지</p>
+</footer>
+
+<div id="reportModal">
+    <h2>신고하기</h2>
+    <form id="reportForm">
+        <input type="hidden" id="reportedCategory" name="reportedCategory" th:value="${post.category}">
+        <input type="hidden" id="reportedAuthor" name="reportedAuthor">
+        <input type="hidden" id="reportedType" name="reportedType">
+        <input type="hidden" id="reportedId" name="reportedId">
+        <input type="hidden" id="reportedPostId" name="reportedPostId"> <!-- 게시글 ID 추가 -->
+        <label for="reason">신고 사유:</label>
+        <textarea id="reason" name="reason" required></textarea><br>
+        <button type="submit">신고 제출</button>
+        <button type="button" id="closeModalButton">취소</button>
+    </form>
+</div>
+
+<script src="/js/novelDetail.js"></script>
+
+<script>
+    function copyToClipboard() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            alert("페이지 URL이 복사되었습니다.");
+        }).catch(err => {
+            console.error('URL 복사에 실패했습니다.', err);
+        });
+    }
+
+    // 글의 예상 읽기 시간을 계산하는 함수
+        function calculateReadingTime() {
+            var content = $('#postContent').text();  // 글 내용 가져오기
+            var words = content.replace(/\s/g, '').length;  // 단어 수 계산
+            var readingTime = 1000; // 분당 1000개의 글자 읽기
+            var time = Math.ceil(words / readingTime);  // 읽기 시간 계산 (반올림)
+            $('#readingTime').text(time);  // 읽기 시간 업데이트
+        }
+
+        // 페이지 로드 시 읽기 시간 계산
+        calculateReadingTime();
+
+    // 글을 일정 길이로 나누는 함수
+    const MAX_LENGTH = 3000; // 페이지당 글자 수
+    let currentPage = 0;
+    const content = $('#postContent').text();
+    const pages = [];
+
+    // 글을 페이지별로 나누기
+    function splitContent(content) {
+        for (let i = 0; i < content.length; i += MAX_LENGTH) {
+            pages.push(content.slice(i, i + MAX_LENGTH));
+        }
+    }
+
+    // 페이지 내용 표시 함수
+    function displayPage(page) {
+        if (page >= 0 && page < pages.length) {
+            $('#postContent').text(pages[page]);
+            currentPage = page;
+        }
+    }
+
+    // 페이지 전환 함수
+    function changePage(direction) {
+        const nextPage = currentPage + direction;
+        if (nextPage >= 0 && nextPage < pages.length) {
+            displayPage(nextPage);
+        }
+    }
+
+    // 글을 분할하고 첫 번째 페이지를 표시
+    splitContent(content);
+    displayPage(0);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>마이페이지</title>
+    <!-- CSS 파일 불러오기 -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/myPage.css}">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="inside-body">
+    <h1>마이페이지</h1>
+
+    <p>환영합니다, <span th:text="${nickname}">사용자</span>님!</p> <!-- 닉네임 표시 -->
+
+    <!-- 가장 선호하는 게시판 표시 -->
+    <p th:text="|${nickname}님의 가장 선호하는 게시판은 ${preferredCategory}입니다.|"></p>
+
+    <nav>
+        <ul>
+            <li><a th:href="@{/myPosts}">내가 작성한 글 보기</a></li>
+            <li><a th:href="@{/myComments}">내가 작성한 댓글 보기</a></li>
+            <li><a th:href="@{/likedPosts}">내가 좋아요 한 게시글 보기</a></li>
+            <li><a th:href="@{/mySubscriptions}">내 구독 목록 보기</a></li> <!-- 구독 목록 보기 항목 추가 -->
+            <li><a th:href="@{/userInfo}">내 정보 보기</a></li>
+            <li><a th:href="@{/userInfoUpdate}">회원정보 수정</a></li>
+            <li><a th:href="@{/sponsorship/mySponsorships}">내가 받은 후원 보기</a></li> <!-- 내가 받은 후원 보기 항목 추가 -->
+            <form action="/user/delete" method="post" onsubmit="return confirmDelete(event)">
+                <button type="submit">회원탈퇴</button>
+            </form>
+        </ul>
+    </nav>
+</div>
+</body>
+<script>
+    function confirmDelete(event) {
+        event.preventDefault(); // 폼 자동 제출 방지
+
+        swal({
+            title: "정말로 회원탈퇴를 하시겠습니까?",
+            text: "탈퇴 시 계정 복구가 불가능합니다.",
+            icon: "warning",
+            buttons: ["취소", "탈퇴"],
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                event.target.submit(); // 확인 시 폼 제출
+                swal("계정이 삭제되었습니다.", {
+                    icon: "success",
+                });
+            } else {
+                swal("회원탈퇴가 취소되었습니다.");
+            }
+        });
+    }
+</script>
+</html>

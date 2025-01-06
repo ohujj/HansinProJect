@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신고하기</title>
+</head>
+<body>
+<h1>신고하기</h1>
+<form id="reportForm">
+    <label for="reportedType">신고 대상:</label>
+    <select id="reportedType" name="reportedType">
+        <option value="POST">게시글</option>
+        <option value="COMMENT">댓글</option>
+    </select><br>
+
+    <label for="reportedId">대상 ID:</label>
+    <input type="text" id="reportedId" name="reportedId"><br>
+
+    <label for="reason">신고 사유:</label>
+    <textarea id="reason" name="reason"></textarea><br>
+
+    <button type="button" onclick="submitReport()">신고하기</button>
+</form>
+
+<script>
+    function submitReport() {
+        const report = {
+            reportedType: document.getElementById('reportedType').value,
+            reportedId: document.getElementById('reportedId').value,
+            reason: document.getElementById('reason').value,
+            reporter: 'testUser'  // 예시로 고정된 유저 이름
+        };
+
+        fetch('/reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(report)
+        })
+        .then(response => {
+            if (response.ok) alert('신고가 접수되었습니다!');
+            else alert('신고 접수에 실패했습니다.');
+        });
+    }
+</script>
+</body>
+</html>

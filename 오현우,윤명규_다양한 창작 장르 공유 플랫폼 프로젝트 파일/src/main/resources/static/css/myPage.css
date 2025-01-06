@@ -1,0 +1,78 @@
+/* 기본 배경과 텍스트 색상 */
+body{
+    background-color: #efe8df;
+}
+.inside-body{
+    text-align: center;
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 사용자 환영 문구 */
+.inside-body p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* 내비게이션 스타일 */
+.inside-body nav {
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 내비게이션 목록 스타일 */
+.inside-body nav ul {
+    text-align: center;
+    display: block;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.inside-body nav ul li {
+    margin-bottom: 12px;
+}
+
+/* 링크 스타일 */
+.inside-body nav ul li a {
+    display: block;
+    text-decoration: none;
+    color: #4CAF50;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.inside-body nav ul li a:hover {
+    background-color: #f0f0f0;
+}
+
+/* 회원탈퇴 버튼 스타일 */
+.inside-body form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.inside-body form button:hover {
+    background-color: #c0392b;
+}
